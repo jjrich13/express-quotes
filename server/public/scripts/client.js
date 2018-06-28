@@ -3,6 +3,7 @@ $(document).ready(readyNow);
 function readyNow(){
     console.log('JQ');
     addQuotesToDom();
+    addClickHandlers();
 }
 
 function addQuotesToDom(){
@@ -11,7 +12,7 @@ function addQuotesToDom(){
         url: '/quotes',
         method: 'GET'
     }).done(function(res){
-        console.log(res);
+        $('#quoteHolder').empty();
         for (let i = 0; i < res.length; i++) {
             $('#quoteHolder').append(`
             <div class="card">
@@ -35,4 +36,31 @@ function addQuotesToDom(){
         console.log(errorRes);
         alert('Request Failed, error ' + errorRes.status)
     })
+}
+
+function addClickHandlers(){
+    $('#quoteButton').on('click', handleQuoteButtonClick);
+}
+
+function handleQuoteButtonClick(){
+    let text = $('#text').val();
+    let author = $('#author').val();
+    let source = $('#source').val();
+    
+
+    $.ajax({
+        url: '/quotes',
+        method: 'POST',
+        data: {
+            text: text,
+            author: author,
+            source: source
+        }
+    }).done( function(response) {
+            console.log(response);
+            addQuotesToDom();
+            
+    });
+
+    
 }
